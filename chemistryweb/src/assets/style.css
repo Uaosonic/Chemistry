@@ -1,0 +1,92 @@
+body {
+  padding-top: 40px;
+  padding-bottom: 40px;
+  background-color: #eee;
+}
+h2 {
+	text-align: center;
+}
+.form-signin {
+  max-width: 330px;
+  padding: 15px;
+  margin: 0 auto;
+}
+.form-signin .form-signin-heading,
+.form-signin .checkbox {
+  margin-bottom: 10px;
+}
+.form-signin .checkbox {
+  font-weight: normal;
+}
+.form-signin .form-control {
+  position: relative;
+  height: auto;
+  -webkit-box-sizing: border-box;
+     -moz-box-sizing: border-box;
+          box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+}
+.form-signin .form-control:focus {
+  z-index: 2;
+}
+.form-signin input[type="text"] {
+  margin-bottom: -1px;
+  border-bottom-right-radius: 0;
+  border-bottom-left-radius: 0;
+}
+.form-signin input[type="password"] {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+  margin-bottom: 40px;
+}
+.form-choice {
+	max-width: 960px;
+	padding: 15px;
+  	margin: 0 auto;
+  	padding: 30px;
+}
+.choiceBlock {
+	padding: 40px;
+	background-color: #fff;
+	box-shadow: 0 10px 15px 0 rgba(0,0,0,.21);
+	border-radius: 10px;
+	margin-bottom: 40px;
+}
+.choiceQuestion {
+	font-size: 18px;
+	margin-bottom: 30px;
+}
+.choiceQuestion em {
+	font-style: normal;
+	font-size: 30px;
+	margin-right: 5px;
+	color: orange;
+	font-weight: bolder;
+}
+.option {
+	line-height: 42px;
+	display: block;
+	font-size: 16px;
+	font-weight: lighter;
+	margin-bottom: 10px;
+	padding: 5px 6%;
+}
+.form-choice label input[type="radio"] {
+	margin-right: 10px;
+}
+.radio-show {
+	display: inline-block;
+	margin-right: 10px;
+	vertical-align: sub;
+	height:20px;
+	width:20px;
+	border:3px solid #ffdd2b;
+	border-radius:50%;
+}
+.radio-hidden {
+	display:none;
+}
+.radio-hidden:checked+span {
+	background-color:#ffdd2b;
+}
