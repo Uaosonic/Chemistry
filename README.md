@@ -1,2 +1,2 @@
 # Chemistry web
-# webpack+axios
+# vue-cli+axios
