@@ -1,5 +1,18 @@
 <template>
     <div class="container">
+        <template v-if="showDialog === true">
+            <div class="dialog">
+                <div class="mask"></div>
+                <div class="dialog-content">
+                    <h3 class="title">答题结果</h3>
+                    <p class="text">正确题目数量：{{result.correctCount}}道</p>
+                    <p class="text">错误题目数量：{{result.errorCount}}道</p>
+                    <div class="btn-group">
+                        <div class="btn" @click="close">确定</div>
+                    </div>
+                </div>
+            </div>
+        </template>
         <div id="searchQues">
             <span class="help-block">请选择章：</span>
             <select id="searchCha" class="form-control"  @change="changeSession($event)">
@@ -17,16 +30,16 @@
         <div class="form-choice">
             <div class="choiceBlock" v-for="(item,index) in Exercise">
                 <template v-if="item.type == 0">
-                    <p class="choiceQuestion"><em>选择题：{{item.choiceQuesId}}. </em>{{item.quesDescription}}</p>
-                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="A"><span class="radio-show"></span>A.{{item.optionA}}</label>
-                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="B"><span class="radio-show"></span>B.{{item.optionB}}</label>
-                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="C"><span class="radio-show"></span>C.{{item.optionC}}</label>
-                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="D"><span class="radio-show"></span>D.{{item.optionD}}</label>
+                    <p class="choiceQuestion"><em>选择题：{{item.choiceQuesId}}. </em><span v-html="item.quesDescription">{{item.quesDescription}}</span></p>
+                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="A" v-bind:disabled="isDisable"><span class="radio-show"></span>A.<span v-html="item.optionA">{{item.optionA}}</span></label>
+                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="B" v-bind:disabled="isDisable"><span class="radio-show"></span>B.<span v-html="item.optionB">{{item.optionB}}</span></label>
+                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="C" v-bind:disabled="isDisable"><span class="radio-show"></span>C.<span v-html="item.optionC">{{item.optionC}}</span></label>
+                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.choiceQuesId" value="D" v-bind:disabled="isDisable"><span class="radio-show"></span>D.<span v-html="item.optionD">{{item.optionD}}</span></label>
                 </template>
                 <template v-else-if="item.type == 1">
-                    <p class="choiceQuestion"><em>判断题：{{item.judgmentQuesId}}. </em> {{item.judgQuesDescription}}</p>
-                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.judgmentQuesId"  value="对"><span class="radio-show"></span>对</label>
-                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.judgmentQuesId"  value="错"><span class="radio-show"></span>错</label>
+                    <p class="choiceQuestion"><em>判断题：{{item.judgmentQuesId}}. </em> <span v-html="item.judgQuesDescription">{{item.judgQuesDescription}}</span></p>
+                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.judgmentQuesId" value="对" v-bind:disabled="isDisable"><span class="radio-show"></span>对</label>
+                    <label class="option"><input type="radio" class="radio-hidden" v-bind:name="item.type+'|'+item.judgmentQuesId" value="错" v-bind:disabled="isDisable"><span class="radio-show"></span>错</label>
                 </template>
             </div>
             <button class="btn btn-primary btn-lg btn-block" @click="subQues">点击提交</button>
@@ -42,7 +55,10 @@ export default {
             Exercise: [],
             Chapter: [],
             Section: [],
-            Answer: []
+            Answer: [],
+            result: {},
+            showDialog: false,
+            isDisable: false
         }
     },
     mounted: function(){
@@ -53,7 +69,6 @@ export default {
         getChapter: function(){
             this.axios.get('ques/student/getChapter')
             .then(res => {
-                console.log(res.data);
                 this.Chapter = res.data;
                 this.getSession(this.Chapter[0].chapterId);
             }, res => {
@@ -64,7 +79,6 @@ export default {
             console.log(chapterId);
             this.axios.get('/ques/getSession',{params:{chapterId: chapterId}})
             .then(res => {
-                console.log(res.data);
                 this.Section = res.data;
             }, res => {
                 console.log(res);
@@ -81,7 +95,6 @@ export default {
         changeSession: function(event){
             this.axios.get('/ques/getSession',{params:{chapterId: event.target.value}})
             .then(res => {
-                console.log(res.data);
                 this.Section = res.data;
             }, res => {
                 console.log(res);
@@ -122,15 +135,26 @@ export default {
             })
             console.log(this.Answer);
             if(flag == this.Exercise.length){
-                this.axios.post('/answer/student/submitAnswer',this.Answer)
-                .then(res => {
-                    console.log(res.data);
-                    alert("提交成功！");
-                }, res => {
-                    console.log(res);
-                    alert(res);
-                })
-            }   
+                if(this.isDisable === false) {
+                    this.axios.post('/answer/student/submitAnswer',this.Answer)
+                    .then(res => {
+                        this.result = res.data;
+                        this.showDialog = true;
+                        this.isDisable = true;
+                    }, res => {
+                        console.log(res);
+                    })
+                }
+                else {
+                    this.showDialog = true;
+                }
+            }
+            else {
+                alert("请确认答完所有题目后再进行提交！")
+            } 
+        },
+        close: function(){
+            this.showDialog = false;
         }
     } 
 }
@@ -143,5 +167,56 @@ export default {
     }
     .panel-body {
         padding: 10px;
+    }
+    .dialog {
+        position: relative;
+    }
+    .dialog .mask {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        z-index: 50001;
+        background: rgba(0,0,0,.5);
+    }
+    .dialog .dialog-content {
+        position: fixed;
+        box-sizing: border-box;
+        padding: 20px;
+        width: 80%;
+        min-height: 140px;
+        left: 50%;
+        top: 50%;
+        transform: translate(-50%, -50%);
+        border-radius: 5px;
+        background: #fff;
+        z-index: 50002;
+    }
+    .dialog .dialog-content .title {
+        font-size: 16px;
+        font-weight: 600;
+        line-height: 30px;
+    }
+    .dialog .dialog-content .text {
+        font-size: 14px;
+        line-height: 30px;
+        color: #555;
+        margin-bottom: 0rem;
+    }
+    .dialog .dialog-content .text:last-of-type {
+        margin-bottom: 1rem;
+    }
+    .dialog .dialog-content .btn-group {
+        display: flex;
+        position: absolute;
+        right: 0;
+        bottom: 10px;
+    }
+    .dialog .dialog-content .btn-group .btn {
+        padding: 10px 20px;
+        font-size: 14px;
+        margin-bottom: 0px;
+        margin-top: 0px;
     }
 </style>

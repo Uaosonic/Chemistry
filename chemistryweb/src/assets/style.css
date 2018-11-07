@@ -41,13 +41,12 @@ h2 {
   margin-bottom: 40px;
 }
 .form-choice {
-	max-width: 960px;
-	padding: 15px;
-  	margin: 0 auto;
-  	padding: 30px;
+	max-width: 980px;
+  margin: 0 auto;
+  padding: 2%;
 }
 .choiceBlock {
-	padding: 40px;
+	padding: 5%;
 	background-color: #fff;
 	box-shadow: 0 10px 15px 0 rgba(0,0,0,.21);
 	border-radius: 10px;
@@ -89,4 +88,8 @@ h2 {
 }
 .radio-hidden:checked+span {
 	background-color:#ffdd2b;
+}
+.option span p,
+.choiceQuestion span p {
+	display: inline-block;
 }

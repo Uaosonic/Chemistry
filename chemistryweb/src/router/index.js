@@ -3,6 +3,7 @@ import Router from 'vue-router'
 import Loginin from '@/components/Loginin'
 import choice from '@/components/choice'
 import selectCourse from '@/components/selectCourse'
+import error from '@/components/error'
 Vue.use(Router)
 
 export default new Router({
@@ -21,6 +22,11 @@ export default new Router({
       path: '/selectCourse',
       name: 'selectCourse',
       component: selectCourse
+    },
+    {
+      path: '/error',
+      name: 'error',
+      component: error
     }
   ]
 })

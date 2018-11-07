@@ -7,8 +7,8 @@
 
 <script>
 export default {
-    name: 'selectCourse',
-    data () {
+  name: 'selectCourse',
+  data () {
     return {
       courseList: []
     }
@@ -20,14 +20,12 @@ export default {
     getCourseList: function () {
       this.axios.get('/course/getAllCourse')
       .then(res => {
-        console.log(res.data);
         this.courseList = res.data;
       }, res => {
           console.log(res);
       })
     },
     chooseCourse: function(courseId){
-      console.log(courseId);
       this.axios.get('/loginReginster/selectCourse',{params:{courseId: courseId}})
       .then(res => {
         if(res.data.status == 1){

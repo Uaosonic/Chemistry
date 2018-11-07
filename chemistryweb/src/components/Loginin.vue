@@ -25,8 +25,6 @@ export default {
     submit: function () {
       this.axios.post('/loginReginster/login',this.$qs.stringify({username: this.username, password: this.password}))
       .then(res => {
-        console.log(res.data);
-        console.log(res.data.level);
         if(res.data.level == 0){      
           this.$router.push('/selectCourse');
         }
@@ -36,27 +34,6 @@ export default {
       }, res => {
           console.log(res.data.status);
       })
-
-      // this.axios({
-      //   method: 'post',
-      //   url: 'http://47.93.197.5/loginReginster/login',
-      //   data: {
-      //     username: this.username,
-      //     password: this.password
-      //   },
-      //   mode: 'no-cors',  
-      //   headers: {  
-      //     'Access-Control-Allow-Origin': '*',  
-      //     'Content-Type': 'application/json',  
-      //   },  
-      //   withCredentials: true,  
-      //   credentials: 'same-origin',  
-      // }).then(res => {  
-      //   console.log(res.level);
-      //   console.log(res.status);
-      // }, res => {
-      //     console.log(res.status);
-      // });
     }
   }
 }
