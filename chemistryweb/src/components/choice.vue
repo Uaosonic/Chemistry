@@ -26,7 +26,9 @@
 
             <button class="btn btn-primary btn-lg btn-block" @click="searchQues" style="margin: 20px 0px;">查询</button>
         </div>
-       
+       <div class="loading" v-show="loadFlag">
+           <div class="circle loader"></div>
+       </div>
         <div class="form-choice">
             <div class="choiceBlock" v-for="(item,index) in Exercise">
                 <template v-if="item.type == 0">
@@ -58,7 +60,8 @@ export default {
             Answer: [],
             result: {},
             showDialog: false,
-            isDisable: false
+            isDisable: false,
+            loadFlag: true
         }
     },
     mounted: function(){
@@ -88,6 +91,7 @@ export default {
             this.axios.get('/answer/student/getOpenQues')
             .then(res => {
                 this.Exercise = res.data;
+                this.loadFlag = false;
             }, res => {
                 console.log(res);
             })
@@ -103,9 +107,11 @@ export default {
         searchQues: function(){
             let theCha = document.querySelector('#searchCha').value;
             let theSec = document.querySelector('#searchSec').value;
+            this.loadFlag = true;
             this.axios.get('/answer/student/searchOpenQues',{params:{chapterId: theCha, sessionId: theSec}})
             .then(res => {
                 this.Exercise = res.data;
+                this.loadFlag = false;
             }, res => {
                 console.log(res);
             })
@@ -218,5 +224,36 @@ export default {
         font-size: 14px;
         margin-bottom: 0px;
         margin-top: 0px;
+    }
+    .loading {
+        margin: 15px auto;
+        text-align: center;
+    }
+    .loader {
+        background: linear-gradient(to right, rgb(22, 113, 202) 50%, transparent 50%);
+        animation: spin 1s infinite linear;
+    }
+    .circle {
+        display: inline-block;
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        box-shadow: 4px -40px 60px 5px rgb(26, 117, 206) inset;
+    }
+    .loader:before {
+        display: block;
+        content: '';
+        position: relative;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 90px;
+        height: 90px;
+        background-color: #eee;
+        border-radius: 50%;
+    }
+    @keyframes spin {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
     }
 </style>
